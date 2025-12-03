@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: #7a93b4;
+        background-image: repeating-linear-gradient(
+            to right,
+            transparent 0 100px,
+            #25283b22 100px 101px
+          ),
+          repeating-linear-gradient(
+            to bottom,
+            transparent 0 100px,
+            #53577022 100px 101px
+          );
+      }
+
+      body::before {
+        position: absolute;
+        width: min(1400px, 90vw);
+        top: 10%;
+        left: 50%;
+        height: 90%;
+        transform: translateX(-50%);
+        content: "";
+        background-image: url(images/bg.png);
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: top center;
+        pointer-events: none;
+        z-index: 0; /* garante que fique atrás do overlay */
+      }
+
+      .banner .slider .item {
+        overflow: visible;
+        position: relative;
+        z-index: 1;
+      }
+
+      .banner .slider .item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.3s ease;
+        transform-origin: center center;
+        cursor: pointer;
+      }
+
+      .banner .slider .item:hover img {
+        transform: scale(1.1);
+      }
+
+      .banner .slider .item img.active {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(2);
+        z-index: 10;
+      }
+
+      /* Fullscreen via classe (opcional, se quiser usar sem overlay) */
+      .banner .slider .item img.fullscreen {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: auto;
+        height: auto;
+        max-width: 100vw;
+        max-height: 100vh;
+        transform: translate(-50%, -50%);
+        object-fit: contain;
+        z-index: 9999;
+        background-color: transparent;
+      }
+
+      /* Overlay independente e estável */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      }
+      .overlay img {
+        max-width: 95vw;
+        max-height: 95vh;
+        object-fit: contain;
+        pointer-events: none;
+      }
+    </style>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="banner">
+      <div class="slider" style="--quantity: 10">
+        <div class="item" style="--position: 1">
+          <img src="images/dragon_1.jpg" alt="" />
+        </div>
+        <div class="item" style="--position: 2">
+          <img src="images/dragon_2.jpg" alt="" />
+        </div>
+        <div class="item" style="--position: 3">
+          <img src="images/dragon_3.jpg" alt="" />
+        </div>
+        <div class="item" style="--position: 4">
+          <img src="images/dragon_4.jpg" alt="" />
+        </div>
+        <div class="item" style="--position: 5">
+          <img src="images/dragon_5.jpg" alt="" />
+        </div>
+        <div class="item" style="--position: 6">
+          <img src="images/dragon_6.jpg" alt="" />
+        </div>
+        <div class="item" style="--position: 7">
+          <img src="images/dragon_7.jpg" alt="" />
+        </div>
+        <div class="item" style="--position: 8">
+          <img src="images/dragon_8.jpg" alt="" />
+        </div>
+        <div class="item" style="--position: 9">
+          <img src="images/dragon_9.jpg" alt="" />
+        </div>
+        <div class="item" style="--position: 10">
+          <img src="images/dragon_10.jpg" alt="" />
+        </div>
+      </div>
+      <div class="content">
+        <h1 data-content="CSS ONLY">CSS ONLY</h1>
+        <div class="author">
+          <h2>LOOK FOR ME</h2>
+          <p><b>Web Design</b></p>
+          <p>My name is Fernando Gomes, I'm militar</p>
+        </div>
+        <div class="model"></div>
+      </div>
+    </div>
+
+    <!-- Overlay precisa estar dentro do body -->
+    <div id="overlay" class="overlay" aria-hidden="true">
+      <img id="overlayImg" alt="Fullscreen" />
+    </div>
+
+    <!-- Script ao final, após o overlay existir no DOM -->
+    <script>
+      const overlay = document.getElementById("overlay");
+      const overlayImg = document.getElementById("overlayImg");
+      const images = document.querySelectorAll(".banner .slider .item img");
+
+      function showOverlay(src) {
+        overlayImg.src = src;
+        overlay.style.display = "flex";
+        overlay.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function hideOverlay() {
+        overlay.style.display = "none";
+        overlay.setAttribute("aria-hidden", "true");
+        overlayImg.removeAttribute("src");
+        document.body.style.overflow = "";
+      }
+
+      images.forEach((img) => {
+        img.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          showOverlay(img.src);
+        });
+        img.addEventListener(
+          "touchstart",
+          (e) => {
+            e.preventDefault();
+            showOverlay(img.src);
+          },
+          { passive: false }
+        );
+      });
+
+      document.addEventListener("mouseup", hideOverlay);
+      document.addEventListener("touchend", hideOverlay);
+      document.addEventListener("touchcancel", hideOverlay);
+
+      // Também permite fechar clicando no fundo
+      overlay.addEventListener("click", hideOverlay);
+    </script>
+  </body>
+</html>

@@ -193,6 +193,13 @@
 
       // Também permite fechar clicando no fundo
       overlay.addEventListener("click", hideOverlay);
+      // Bloqueia o menu de contexto (long press)
+images.forEach((img) => {
+  img.addEventListener("contextmenu", (e) => {
+    e.preventDefault(); // cancela o menu padrão
+  });
+});
     </script>
   </body>
 </html>
+

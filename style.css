@@ -145,3 +145,12 @@
     font-size: 5em;
   }
 }
+/* Impede o menu de contexto padrão em imagens */
+.banner .slider .item img {
+  -webkit-touch-callout: none; /* Safari iOS */
+  -webkit-user-select: none;   /* Safari iOS */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* Padrão */
+  pointer-events: auto;        /* ainda permite clique */
+}
